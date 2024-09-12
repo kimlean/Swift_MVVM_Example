@@ -4,6 +4,9 @@ class UserService {
     
     // Singleton instance (optional)
     static let shared = UserService()
+
+    // EXAMPLE USING UTILITY HELPER
+    // let APIKEY = UtilHelper.shared.getBunleByKeyId("API-KEY");
     
     // Fetch users using the GET request
     func fetchUsers(completion: @escaping (Result<[User], Error>) -> Void) {
