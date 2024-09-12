@@ -1,9 +1,12 @@
 import UIKit
 
 class UserViewController: UIViewController, UITableViewDataSource {
+
+    // => MARK: - VARIBLE DECLEARATION
     private var viewModel = UserViewModel()
     private var tableView = UITableView()
     
+    // => MARK: - VIEW ACTION
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -26,13 +29,14 @@ class UserViewController: UIViewController, UITableViewDataSource {
         // UI setup
         setupUI()
     }
-    
+
+    // MARK: - CONSTRAINT AND UI SETUP
     private func setupUI() {
         title = "Users"
         view.backgroundColor = .white
     }
     
-    // UITableViewDataSource methods
+    // MARK: - COMPONENT ACTIONS
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return viewModel.users.count
     }
