@@ -1,25 +1,21 @@
 import Foundation
 
 class UserViewModel {
-    // Closure to notify the ViewController when the data is updated
     var onUsersUpdated: (() -> Void)?
     
-    // Store users in the ViewModel
     private(set) var users: [User] = [] {
         didSet {
             onUsersUpdated?()
         }
     }
     
-    // Reference to the data service
     private var userService: UserService
     
-    // Initialize the ViewModel with the service
     init(userService: UserService = UserService.shared) {
         self.userService = userService
     }
     
-    // Fetch data from the API using UserService
+    // Fetch users from API
     func loadUsers() {
         userService.fetchUsers { [weak self] result in
             switch result {
@@ -27,7 +23,30 @@ class UserViewModel {
                 self?.users = users
             case .failure(let error):
                 print("Failed to fetch users: \(error)")
-                // Handle the error as necessary (e.g., show an alert)
+            }
+        }
+    }
+    
+    // Add a new user
+    func addUser(name: String, email: String) {
+        userService.createUser(name: name, email: email) { [weak self] result in
+            switch result {
+            case .success(let user):
+                self?.users.append(user)
+            case .failure(let error):
+                print("Failed to create user: \(error)")
+            }
+        }
+    }
+    
+    // Delete a user by ID
+    func deleteUser(userId: Int) {
+        userService.deleteUser(userId: userId) { [weak self] result in
+            switch result {
+            case .success:
+                self?.users.removeAll { $0.id == userId }
+            case .failure(let error):
+                print("Failed to delete user: \(error)")
             }
         }
     }

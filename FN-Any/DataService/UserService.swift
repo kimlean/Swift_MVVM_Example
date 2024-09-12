@@ -2,35 +2,28 @@ import Foundation
 
 class UserService {
     
-    // Singleton pattern if needed (optional)
+    // Singleton instance (optional)
     static let shared = UserService()
     
-    // Function to fetch users from a remote endpoint
+    // Fetch users using the GET request
     func fetchUsers(completion: @escaping (Result<[User], Error>) -> Void) {
-        // Mock API endpoint
         let url = URL(string: "https://jsonplaceholder.typicode.com/users")!
         
-        let task = URLSession.shared.dataTask(with: url) { data, response, error in
-            // Error handling
-            if let error = error {
-                completion(.failure(error))
-                return
-            }
-            
-            // Ensure data is non-nil
-            guard let data = data else {
-                completion(.failure(NSError(domain: "DataError", code: -1, userInfo: nil)))
-                return
-            }
-            
-            // Decode the data into User objects
-            do {
-                let users = try JSONDecoder().decode([User].self, from: data)
-                completion(.success(users))
-            } catch {
-                completion(.failure(error))
-            }
-        }
-        task.resume() // Start the network request
+        NetworkHelper.shared.get(url: url, completion: completion)
+    }
+    
+    // Create a user using the POST request
+    func createUser(name: String, email: String, completion: @escaping (Result<User, Error>) -> Void) {
+        let url = URL(string: "https://jsonplaceholder.typicode.com/users")!
+        let body: [String: Any] = ["name": name, "email": email]
+        
+        NetworkHelper.shared.post(url: url, body: body, completion: completion)
+    }
+    
+    // Delete a user using the DELETE request
+    func deleteUser(userId: Int, completion: @escaping (Result<Void, Error>) -> Void) {
+        let url = URL(string: "https://jsonplaceholder.typicode.com/users/\(userId)")!
+        
+        NetworkHelper.shared.delete(url: url, completion: completion)
     }
 }
